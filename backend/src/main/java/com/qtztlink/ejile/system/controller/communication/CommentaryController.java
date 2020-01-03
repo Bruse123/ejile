@@ -1,5 +1,6 @@
 package com.qtztlink.ejile.system.controller.communication;
 
+import com.qtztlink.ejile.common.annotation.Log;
 import com.qtztlink.ejile.common.bean.ResponseBean;
 import com.qtztlink.ejile.common.exception.UnauthorizedException;
 import com.qtztlink.ejile.system.model.communication.Commentary;
@@ -43,6 +44,25 @@ public class CommentaryController {
         }
     }
 
+    // 根据用户查询评论
+    @RequestMapping("/commentary/getInfoByUid")
+    @ResponseBody
+    public ResponseBean getCommentaryInfoByUid(@RequestParam("UID") int uid) {
+        List<Commentary> commentaries = this.commentaryService.queryCommentaryByUID(uid);
+        if(commentaries!=null){
+            return new ResponseBean()
+                    .code(200)
+                    .message("Success")
+                    .data(commentaries);
+        }else {
+            return new ResponseBean()
+                    .code(200)
+                    .message("Not found")
+                    .data(null);
+        }
+    }
+
+
     @RequestMapping("/commentary/getInfoBySid")
     @ResponseBody
     public ResponseBean getCommentaryInfoBySid(@RequestParam("Sid") int sid){
@@ -75,6 +95,7 @@ public class CommentaryController {
         }
     }
 
+    @Log("用户评论")
     @RequestMapping("/commentary/addCommentary")
     @ResponseBody
     public ResponseBean addCommentary(

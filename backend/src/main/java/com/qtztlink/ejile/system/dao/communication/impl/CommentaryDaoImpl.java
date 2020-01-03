@@ -10,12 +10,19 @@ import org.springframework.stereotype.Repository;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 @Repository("commentaryDao")
 public class CommentaryDaoImpl implements CommentaryDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Override
+    public List<Map<String, Object>> queryAllCommentary() {
+        String sql = "select * from commentary_view";
+        return this.jdbcTemplate.queryForList(sql);
+    }
 
     @Override
     public int add(Commentary commentary) {
@@ -97,6 +104,22 @@ public class CommentaryDaoImpl implements CommentaryDao {
                 new CommentaryMapper());
         if(commentaryList != null && commentaryList.size() > 0){
             return commentaryList.get(0);
+        }
+        else {
+            return null;
+        }
+    }
+
+
+    @Override
+    public List<Commentary> queryCommentaryByUID(Integer uid) {
+        String sql = "select * from commentary_view where Cid = ? order by ctime desc ";
+        Object[] args = {uid};
+        int[] argTypes = {Types.INTEGER};
+        List<Commentary> commentaryList = this.jdbcTemplate.query(sql, args, argTypes,
+                new CommentaryMapper());
+        if(commentaryList != null && commentaryList.size() >0) {
+            return commentaryList;
         }
         else {
             return null;
